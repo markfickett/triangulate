@@ -13,12 +13,28 @@ import sys
 class MeasuredPoint(object):
   def __init__(self, name):
     self.name = name
-    self.edges = []
+    self.neighbors_and_distances = []
+    self.pos = None
 
   def AddEdge(self, neighbor, distance):
-    self.edges.append((neighbor, distance))
+    if self.name == neighbor.name:
+      raise ValueError('Cannot add %r as neighbor of itself.' % self.name)
+    self.neighbors_and_distances.append((neighbor, distance))
 
   def ComputePosition(self):
+    for neighbor, _ in self.neighbors_and_distances:
+      if neighbor.pos is None:
+        raise RuntimeError(
+            'Cannot calculate position of %r, neighbor %r has no position.'
+            % (self.name, neighbor.name))
+    n = len(self.neighbors_and_distances)
+    if n == 0:
+      self.pos = (0.0, 0.0)
+      return
+    if n == 1:
+      origin, dx = self.neighbors_and_distances[0]
+      self.pos = (origin.pos[0] + dx, origin.pos[1])
+      return
     raise NotImplementedError()
 
   def GetIntersections(self, segment_start, segment_end):
@@ -58,20 +74,22 @@ if __name__ == '__main__':
   with open(edges_path) as edges_file:
     for line in edges_file:
       parsed = ParseLine(line)
-      print 'parsed %r => %s' % (line, parsed)
       if parsed is None:
         continue
+      print 'parsed %r => %s' % (line, parsed)
       name, edge_measurements = parsed
       point = MeasuredPoint(name)
       if first_point is None:
         first_point = point
       else:
         last_point = point
+      if point.name in points:
+        raise ValueError('Point %r redeclared.' % point.name)
       points[name] = point
       for neighbor_name, distance in edge_measurements:
         neighbor = points[neighbor_name]
         point.AddEdge(neighbor, distance)
-      #point.ComputePosition()
+      point.ComputePosition()
   sys.exit(0)
   for point in points.itervalues():
     if point in (first_point, last_point):
