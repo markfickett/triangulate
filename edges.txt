@@ -7,21 +7,21 @@ B A 70.7107
 # Subsequent points are in such an order that each completes a new triangle
 # with the previous two points. Of the two possible solutions for each point,
 # the one which is further away from the first endpoint is used.
-C C 70.7107 B 100.0 # completing ABC via AC and BC
+C A 70.7107 B 100.0 # completing ABC via AC and BC
 E B 141.421 C 100.0 # completing BCE via BE and CE
-D E 100.0 B 100.0
+D B 100.0 E 100.0
 G D 141.421 E 100.0
-F G 100.0 D 100.0
+F D 100.0 G 100.0
 I F 141.421 G 100.0
-H I 100.0 F 100.0
+H F 100.0 I 100.0
 K H 141.421 I 100.0
-J K 100.0 H 100.0
+J H 100.0 K 100.0
 M J 141.421 K 100.0
-L M 100.0 J 100.0
+L J 100.0 M 100.0
 Kp L 141.421 M 100.0
 Jp Kp 100.0 L 100.0
 Ip Jp 141.421 Kp 100.0
-Hp Jp 100.0 Ip 100.0
+Hp Ip 100.0 Jp 100.0
 Gp Hp 141.421 Ip 100.0
 Fp Gp 100.0 Hp 100.0
 Ep Fp 141.421 Gp 100.0
