@@ -2,7 +2,7 @@
 # The first endpoint is named by itself, and defines the origin.
 A
 # The second point only defines one line segment. Its position is picked
-# arbitrarily.
+# arbitrarily as on the vector 3pi/4 (45deg left of the y axis) from A.
 B A 70.7107
 # Subsequent points are in such an order that each completes a new triangle
 # with the previous two points. Of the two possible solutions for each point,
