@@ -18,16 +18,16 @@ K H 141.421 I 100.0
 J H 100.0 K 100.0
 M J 141.421 K 100.0
 L J 100.0 M 100.0
-Kp L 141.421 M 100.0
-Jp Kp 100.0 L 100.0
-Ip Jp 141.421 Kp 100.0
-Hp Ip 100.0 Jp 100.0
-Gp Hp 141.421 Ip 100.0
-Fp Gp 100.0 Hp 100.0
-Ep Fp 141.421 Gp 100.0
-Dp Ep 100.0 Fp 100.0
-Cp Dp 141.421 Ep 100.0
-Bp Cp 100.0 Dp 100.0
+K' L 141.421 M 100.0
+J' K' 100.0 L 100.0
+I' J' 141.421 K' 100.0
+H' I' 100.0 J' 100.0
+G' H' 141.421 I' 100.0
+F' G' 100.0 H' 100.0
+E' F' 141.421 G' 100.0
+D' E' 100.0 F' 100.0
+C' D' 141.421 E' 100.0
+B' C' 100.0 D' 100.0
 # The last point introduced is taken to be the other endpoint of the segment
 # being surveyed, such that A to Ap is of interest.
-Ap Bp 70.7107 Cp 70.7107
+A' B' 70.7107 C' 70.7107
