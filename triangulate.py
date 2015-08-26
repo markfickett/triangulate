@@ -165,6 +165,8 @@ if __name__ == '__main__':
     print 'Usage: %s <edge file name>' % sys.argv[0]
     sys.exit(1)
   edges_path = sys.argv[1]
+
+  # Load the lattice.
   points = {}
   ordered_points = []
   with open(edges_path) as edges_file:
@@ -185,11 +187,24 @@ if __name__ == '__main__':
 
   for point in ordered_points:
     point.ComputePosition()
+
+  # Correct so that the first-to-last line is vertical. This should really be a
+  # rotation, not a horizontal shift, but with a mostly-vertical lattice the
+  # loss of precision should be trivial.
+  first, last = ordered_points[0], ordered_points[-1]
+  dx = last.x - first.x
+  if abs(dx) > EPSILON:
+    print 'correcting'
+    dx_dy = dx / (last.y - first.y)
+    for point in ordered_points:
+      point.x -= dx_dy * (point.y - first.y)
+
+  for point in ordered_points:
     print '%s\t%f, %f' % (point.name, point.x, point.y)
 
+  # Calculate intersections.
   print '%s\t%s\t%s' % ('segment', 'intersection location', 'distance')
   for point in ordered_points[2:-1]:
-    for neighbor_point, (x, y), distance in point.GetIntersections(
-        ordered_points[0], ordered_points[-1]):
+    for neighbor_point, (x, y), distance in point.GetIntersections(first, last):
       print '%s %s\t%f, %f\t%f' % (
           point.name, neighbor_point.name, x, y, distance)
