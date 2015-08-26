@@ -66,28 +66,28 @@ def GetThirdTrianglePoint((point_a, b), (point_b, a), opposite=False):
   ax, ay = point_a.x, point_a.y
   bx, by = point_b.x, point_b.y
   c = math.sqrt((ax - bx)**2 + (ay - by)**2)
-  print 'ax, ay =', ax, ',', ay
-  print 'b =', b
-  print 'bx, by =', bx, ',', by
-  print 'a =', a
-  print 'c =', c
+  #print 'ax, ay =', ax, ',', ay
+  #print 'b =', b
+  #print 'bx, by =', bx, ',', by
+  #print 'a =', a
+  #print 'c =', c
 
   # Calculate the angle CAB using law of consines.
   alpha = math.acos((b**2 + c**2 - a**2) / (2 * b * c))
-  print 'alpha =', alpha
+  #print 'alpha =', alpha
 
   # Calculate the angle between AB and the x axis.
   sub_alpha = math.acos((bx - ax) / c)
   if by < ay:  # third and fourth quadrant
     sub_alpha = 2 * math.pi - sub_alpha
-  print 'sub_alpha =', sub_alpha
+  #print 'sub_alpha =', sub_alpha
 
   # The sum alpha + sub_alpha is the angle from the x axis to AC. Use the
   # definition of cosine to find C.
   full_alpha = sub_alpha - alpha if opposite else sub_alpha + alpha
   cx = ax + b * math.cos(full_alpha)
   cy = ay + b * math.sin(full_alpha)
-  print 'cx, cy =', cx, ',', cy
+  #print 'cx, cy =', cx, ',', cy
 
   return cx, cy
 
@@ -120,7 +120,6 @@ if __name__ == '__main__':
       parsed = ParseLine(line)
       if parsed is None:
         continue
-      print 'parsed %r => %s' % (line, parsed)
       name, edge_measurements = parsed
       point = MeasuredPoint(name)
       if first_point is None:
