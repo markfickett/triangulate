@@ -60,7 +60,7 @@ class MeasuredPoint(object):
     that distance is in [0, length of segment to neighbor] it yields the result.
     """
     for neighbor, neighbor_distance in self.neighbors_and_distances:
-      print '? %r %r' % (self.name, neighbor.name)
+      #print '? %r %r' % (self.name, neighbor.name)
       intersection, distance = GetIntersectionAndDistance(
           (self.x, self.y),
           (neighbor.x, neighbor.y),
@@ -106,27 +106,27 @@ def GetThirdTrianglePoint((point_a, b), (point_b, a), opposite=False):
 def GetIntersectionAndDistance((x1, y1), (x2, y2), l, (x3, y3), (x4, y4)):
   # https://en.wikipedia.org/wiki/
   #     Line%E2%80%93line_intersection#Given_two_points_on_each_line
-  print 'x1, y1 = ', x1, ',', y1
-  print 'x2, y2 = ', x2, ',', y2
-  print 'x3, y3 = ', x3, ',', y3
-  print 'x4, y4 = ', x4, ',', y4
+  #print 'x1, y1 = ', x1, ',', y1
+  #print 'x2, y2 = ', x2, ',', y2
+  #print 'x3, y3 = ', x3, ',', y3
+  #print 'x4, y4 = ', x4, ',', y4
   denom = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4)
-  print 'denom =', denom
+  #print 'denom =', denom
   if abs(denom) < EPSILON:  # parallel
-    print 'parallel'
+    #print 'parallel'
     return None, None
   x_num = (x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)
   y_num = (x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)
 
   x, y = x_num / denom, y_num / denom
-  print 'x, y =', x, ',', y
+  #print 'x, y =', x, ',', y
   d = math.sqrt((y - y1)**2 + (x - x1)**2)
-  print 'd =', d
+  #print 'd =', d
   if d + EPSILON > l or d < EPSILON:  # past the end of the segment
-    print 'past end'
+    #print 'past end'
     return None, None
   if not ((sgn(x - x1) == sgn(x2 - x1)) and (sgn(y - y1) == sgn(y2 - y1))):
-    print 'before end'
+    #print 'before end'
     return None, None
   return (x, y), d
 
