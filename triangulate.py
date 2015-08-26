@@ -160,6 +160,7 @@ if __name__ == '__main__':
     sys.exit(1)
   edges_path = sys.argv[1]
   points = {}
+  ordered_points = []
   first_point = None
   last_point = None
   with open(edges_path) as edges_file:
@@ -176,14 +177,13 @@ if __name__ == '__main__':
       if point.name in points:
         raise ValueError('Point %r redeclared.' % point.name)
       points[name] = point
+      ordered_points.append(point)
       for neighbor_name, distance in edge_measurements:
         neighbor = points[neighbor_name]
         point.AddEdge(neighbor, distance)
       point.ComputePosition()
       print '%s\t%f\t%f' % (point.name, point.x, point.y)
-  for point in points.itervalues():
-    if point in (first_point, last_point):
-      continue
+  for point in ordered_points[2:-1]:
     for neighbor_point, (x, y), distance in point.GetIntersections(
         first_point, last_point):
       print '%s %s\t%f\t%f, %f' % (
