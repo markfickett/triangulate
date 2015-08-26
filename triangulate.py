@@ -8,8 +8,11 @@
 # would mean that 51.22 units along line segment BC intercects the target.
 
 import math
+import random
 import sys
 
+INTRODUCE_MEASUREMENT_ERROR = True
+MEASUREMENT_ERROR = 6.0 / (100.0 * 12.0)  # 6 inches in 100 feet
 EPSILON = 1e-5
 
 
@@ -149,7 +152,10 @@ def ParseLine(raw_line):
   edges = []
   data = data[1:]
   while data:
-    edges.append((data[0], float(data[1])))
+    distance = float(data[1])
+    if INTRODUCE_MEASUREMENT_ERROR:
+      distance += random.uniform(-MEASUREMENT_ERROR, MEASUREMENT_ERROR)
+    edges.append((data[0], distance))
     data = data[2:]
   return name, edges
 
