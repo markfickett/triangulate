@@ -164,6 +164,7 @@ if __name__ == '__main__':
   first_point = None
   last_point = None
   with open(edges_path) as edges_file:
+    print '%s\t%s' % ('point', 'location')
     for line in edges_file:
       parsed = ParseLine(line)
       if parsed is None:
@@ -182,9 +183,10 @@ if __name__ == '__main__':
         neighbor = points[neighbor_name]
         point.AddEdge(neighbor, distance)
       point.ComputePosition()
-      print '%s\t%f\t%f' % (point.name, point.x, point.y)
+      print '%s\t%f, %f' % (point.name, point.x, point.y)
+  print '%s\t%s\t%s' % ('segment', 'intersection location', 'distance')
   for point in ordered_points[2:-1]:
     for neighbor_point, (x, y), distance in point.GetIntersections(
         first_point, last_point):
-      print '%s %s\t%f\t%f, %f' % (
-          point.name, neighbor_point.name, distance, x, y)
+      print '%s %s\t%f, %f\t%f' % (
+          point.name, neighbor_point.name, x, y, distance)
