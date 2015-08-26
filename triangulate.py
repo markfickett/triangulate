@@ -10,6 +10,8 @@
 import math
 import sys
 
+EPSILON = 1e-5
+
 
 class MeasuredPoint(object):
   def __init__(self, name):
@@ -50,14 +52,23 @@ class MeasuredPoint(object):
       self.x, self.y = x1, y1
 
   def GetIntersections(self, segment_start, segment_end):
-    """Generates a list of (neighbor_point, distance) tuples.
+    """Generates (neighbor_point, intersection_point, distance) triples.
 
     This checks each of its neighbors in turn. If the line segment from this
     point to the neighbor intersects the line segment defined by the arguments,
     it calculates the distance along its segment to the intersection; and if
     that distance is in [0, length of segment to neighbor] it yields the result.
     """
-    raise NotImplementedError()
+    for neighbor, neighbor_distance in self.neighbors_and_distances:
+      print '? %r %r' % (self.name, neighbor.name)
+      intersection, distance = GetIntersectionAndDistance(
+          (self.x, self.y),
+          (neighbor.x, neighbor.y),
+          neighbor_distance,
+          (segment_start.x, segment_start.y),
+          (segment_end.x, segment_end.y))
+      if intersection is not None:
+        yield neighbor, intersection, distance
 
 
 def GetThirdTrianglePoint((point_a, b), (point_b, a), opposite=False):
@@ -90,6 +101,42 @@ def GetThirdTrianglePoint((point_a, b), (point_b, a), opposite=False):
   #print 'cx, cy =', cx, ',', cy
 
   return cx, cy
+
+
+def GetIntersectionAndDistance((x1, y1), (x2, y2), l, (x3, y3), (x4, y4)):
+  # https://en.wikipedia.org/wiki/
+  #     Line%E2%80%93line_intersection#Given_two_points_on_each_line
+  print 'x1, y1 = ', x1, ',', y1
+  print 'x2, y2 = ', x2, ',', y2
+  print 'x3, y3 = ', x3, ',', y3
+  print 'x4, y4 = ', x4, ',', y4
+  denom = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4)
+  print 'denom =', denom
+  if abs(denom) < EPSILON:  # parallel
+    print 'parallel'
+    return None, None
+  x_num = (x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)
+  y_num = (x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)
+
+  x, y = x_num / denom, y_num / denom
+  print 'x, y =', x, ',', y
+  d = math.sqrt((y - y1)**2 + (x - x1)**2)
+  print 'd =', d
+  if d + EPSILON > l or d < EPSILON:  # past the end of the segment
+    print 'past end'
+    return None, None
+  if not ((sgn(x - x1) == sgn(x2 - x1)) and (sgn(y - y1) == sgn(y2 - y1))):
+    print 'before end'
+    return None, None
+  return (x, y), d
+
+
+def sgn(x):
+  if abs(x) < EPSILON:
+    return 0
+  if x < 0:
+    return -1
+  return 1
 
 
 def ParseLine(raw_line):
@@ -133,11 +180,11 @@ if __name__ == '__main__':
         neighbor = points[neighbor_name]
         point.AddEdge(neighbor, distance)
       point.ComputePosition()
-      print '%r\t%f\t%f' % (point.name, point.x, point.y)
-  sys.exit(0)
+      print '%s\t%f\t%f' % (point.name, point.x, point.y)
   for point in points.itervalues():
     if point in (first_point, last_point):
       continue
-    for neighbor_point, distance in point.GetIntersections(
+    for neighbor_point, (x, y), distance in point.GetIntersections(
         first_point, last_point):
-      print point.name, neighbor_point.name, distance
+      print '%s %s\t%f\t%f, %f' % (
+          point.name, neighbor_point.name, distance, x, y)
