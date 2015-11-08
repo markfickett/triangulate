@@ -142,6 +142,16 @@ def sgn(x):
   return 1
 
 
+def ParseDistance(raw):
+  if "'" in raw:
+    feet, inches = raw.split("'")
+    if '"' not in inches:
+      raise ValueError('Bad feet-and-inches: %r' % raw)
+    return 12 * int(feet) + float(inches.strip('"'))
+  else:
+    return float(raw)
+
+
 def ParseLine(raw_line):
   """Returns a point name and a list of (neighbor name, distance) tuples."""
   line_data = raw_line.split('#')[0]
@@ -152,12 +162,18 @@ def ParseLine(raw_line):
   edges = []
   data = data[1:]
   while data:
-    distance = float(data[1])
+    distance = ParseDistance(data[1])
     if INTRODUCE_MEASUREMENT_ERROR:
       distance += random.uniform(-MEASUREMENT_ERROR, MEASUREMENT_ERROR)
     edges.append((data[0], distance))
     data = data[2:]
   return name, edges
+
+
+def FormatFeetAndInches(inches_value):
+  feet = int(inches_value) / 12
+  inches = inches_value - (feet * 12)
+  return '%d\'%.1f"' % (feet, inches)
 
 
 if __name__ == '__main__':
@@ -206,5 +222,5 @@ if __name__ == '__main__':
   print '%s\t%s\t%s' % ('segment', 'intersection location', 'distance')
   for point in ordered_points[2:-1]:
     for neighbor_point, (x, y), distance in point.GetIntersections(first, last):
-      print '%s %s\t%f, %f\t%f' % (
-          point.name, neighbor_point.name, x, y, distance)
+      print '%s %s\t%f, %f\t%s' % (
+          point.name, neighbor_point.name, x, y, FormatFeetAndInches(distance))
