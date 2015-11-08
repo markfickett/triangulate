@@ -7,7 +7,13 @@
 # surveyed line segments and that target. For example, output like BC 51.22
 # would mean that 51.22 units along line segment BC intercects the target.
 
+# for DrawLattice
+import PIL
+import PIL.Image
+import PIL.ImageDraw
+
 import math
+import os
 import random
 import sys
 
@@ -176,6 +182,44 @@ def FormatFeetAndInches(inches_value):
   return '%d\'%.1f"' % (feet, inches)
 
 
+def DrawLattice(ordered_points):
+  min_x = min_y = float('Inf')
+  max_x = max_y = float('-Inf')
+  for point in ordered_points:
+    min_x = min(min_x, point.x)
+    max_x = max(max_x, point.x)
+    min_y = min(min_y, point.y)
+    max_y = max(max_y, point.y)
+
+  offset = 50
+  offset_x = offset + (0 if min_x > 0 else -min_x)
+  offset_y = offset + (0 if min_y > 0 else -min_y)
+  image = PIL.Image.new(
+      'RGBA',
+      (int(max_x - min_x + 2 * offset), int(max_y - min_y + 2 * offset)),
+      (255, 255, 255, 0))
+  draw = PIL.ImageDraw.Draw(image)
+
+  def TransformPoint(in_x, in_y):
+    return int(in_x + offset_x), int(max_y - in_y + offset_y)
+
+  for point in ordered_points:
+    x, y = TransformPoint(point.x, point.y)
+    for neighbor, _ in point.neighbors_and_distances:
+      nx, ny = TransformPoint(neighbor.x, neighbor.y)
+      draw.line((x, y, nx, ny), 'red')
+    draw.text((x, y), point.name, 'black')
+
+  first = ordered_points[0]
+  last = ordered_points[-1]
+  fx, fy = TransformPoint(first.x, first.y)
+  lx, ly = TransformPoint(last.x, last.y)
+  draw.line((fx, fy, lx, ly), 'black')
+
+  image.show()
+  image.save(os.path.expanduser('~/Desktop/lattice.png'))
+
+
 if __name__ == '__main__':
   if len(sys.argv) != 2:
     print 'Usage: %s <edge file name>' % sys.argv[0]
@@ -203,17 +247,19 @@ if __name__ == '__main__':
 
   for point in ordered_points:
     point.ComputePosition()
+  first, last = ordered_points[0], ordered_points[-1]
 
+  """
   # Correct so that the first-to-last line is vertical. This should really be a
   # rotation, not a horizontal shift, but with a mostly-vertical lattice the
   # loss of precision should be trivial.
-  first, last = ordered_points[0], ordered_points[-1]
   dx = last.x - first.x
   if abs(dx) > EPSILON:
     print 'correcting'
     dx_dy = dx / (last.y - first.y)
     for point in ordered_points:
       point.x -= dx_dy * (point.y - first.y)
+  """
 
   for point in ordered_points:
     print '%s\t%f, %f' % (point.name, point.x, point.y)
@@ -224,3 +270,5 @@ if __name__ == '__main__':
     for neighbor_point, (x, y), distance in point.GetIntersections(first, last):
       print '%s %s\t%f, %f\t%s' % (
           point.name, neighbor_point.name, x, y, FormatFeetAndInches(distance))
+
+  DrawLattice(ordered_points)
