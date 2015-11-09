@@ -192,6 +192,9 @@ def DrawLattice(ordered_points):
   if PIL is None:
     print 'PIL unavailable, not drawing lattice.'
     return
+  first = ordered_points[0]
+  last = ordered_points[-1]
+
   min_x = min_y = float('Inf')
   max_x = max_y = float('-Inf')
   for point in ordered_points:
@@ -212,25 +215,27 @@ def DrawLattice(ordered_points):
   def TransformPoint(in_x, in_y):
     return int(in_x + offset_x), int(max_y - in_y + offset_y)
 
-  def DrawLineWithLength(in_ax, in_ay, in_bx, in_by, color):
+  def DrawLineWithLength(in_ax, in_ay, in_bx, in_by, distance, color):
     ax, ay = TransformPoint(in_ax, in_ay)
     bx, by = TransformPoint(in_bx, in_by)
     draw.line((ax, ay, bx, by), color)
-    overall_len = math.sqrt((in_ax - in_bx) ** 2 + (in_ay - in_by) ** 2)
     draw.text(
         ((ax + bx) / 2, (ay + by) / 2),
-        FormatFeetAndInches(overall_len),
+        FormatFeetAndInches(distance),
         color)
 
   for point in ordered_points:
-    for neighbor, _ in point.neighbors_and_distances:
-      DrawLineWithLength(point.x, point.y, neighbor.x, neighbor.y, 'red')
+    for neighbor, dist in point.neighbors_and_distances:
+      DrawLineWithLength(point.x, point.y, neighbor.x, neighbor.y, dist, 'red')
     x, y = TransformPoint(point.x, point.y)
     draw.text((x, y), point.name, 'black')
 
-  first = ordered_points[0]
-  last = ordered_points[-1]
-  DrawLineWithLength(first.x, first.y, last.x, last.y, 'black')
+  overall_len = math.sqrt((first.x - last.x) ** 2 + (first.y - last.y) ** 2)
+  DrawLineWithLength(first.x, first.y, last.x, last.y, overall_len, 'black')
+
+  for point in ordered_points[2:-1]:
+    for neighbor, (x, y), dist in point.GetIntersections(first, last):
+      DrawLineWithLength(point.x, point.y - 3, x, y - 3, dist, 'cyan')
 
   image.show()
   image.save('lattice.png')
