@@ -258,18 +258,6 @@ if __name__ == '__main__':
     point.ComputePosition()
   first, last = ordered_points[0], ordered_points[-1]
 
-  """
-  # Correct so that the first-to-last line is vertical. This should really be a
-  # rotation, not a horizontal shift, but with a mostly-vertical lattice the
-  # loss of precision should be trivial.
-  dx = last.x - first.x
-  if abs(dx) > EPSILON:
-    print 'correcting'
-    dx_dy = dx / (last.y - first.y)
-    for point in ordered_points:
-      point.x -= dx_dy * (point.y - first.y)
-  """
-
   for point in ordered_points:
     print '%s\t%f, %f' % (point.name, point.x, point.y)
 
