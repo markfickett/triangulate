@@ -212,21 +212,28 @@ def DrawLattice(ordered_points):
   def TransformPoint(in_x, in_y):
     return int(in_x + offset_x), int(max_y - in_y + offset_y)
 
+  def DrawLineWithLength(in_ax, in_ay, in_bx, in_by, color):
+    ax, ay = TransformPoint(in_ax, in_ay)
+    bx, by = TransformPoint(in_bx, in_by)
+    draw.line((ax, ay, bx, by), color)
+    overall_len = math.sqrt((in_ax - in_bx) ** 2 + (in_ay - in_by) ** 2)
+    draw.text(
+        ((ax + bx) / 2, (ay + by) / 2),
+        FormatFeetAndInches(overall_len),
+        color)
+
   for point in ordered_points:
-    x, y = TransformPoint(point.x, point.y)
     for neighbor, _ in point.neighbors_and_distances:
-      nx, ny = TransformPoint(neighbor.x, neighbor.y)
-      draw.line((x, y, nx, ny), 'red')
+      DrawLineWithLength(point.x, point.y, neighbor.x, neighbor.y, 'red')
+    x, y = TransformPoint(point.x, point.y)
     draw.text((x, y), point.name, 'black')
 
   first = ordered_points[0]
   last = ordered_points[-1]
-  fx, fy = TransformPoint(first.x, first.y)
-  lx, ly = TransformPoint(last.x, last.y)
-  draw.line((fx, fy, lx, ly), 'black')
+  DrawLineWithLength(first.x, first.y, last.x, last.y, 'black')
 
   image.show()
-  image.save(os.path.expanduser('~/Desktop/lattice.png'))
+  image.save('lattice.png')
 
 
 if __name__ == '__main__':
