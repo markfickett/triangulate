@@ -19,8 +19,10 @@ B A 70.71067811865476
 # Subsequent points are in such an order that each completes a new triangle
 # with the previous two points. Of the two possible solutions for each point,
 # the one which is further away from the first endpoint is used.
-C A 70.71067811865476 B 100.0  # completing ABC via AC and BC
-E B 141.4213562373095 C 100.0  # completing BCE via BE and CE
+# C to A is __, C to B is __. Completes triangle ABC via AC and BC.
+C A 70.71067811865476 B 100.0
+# E to B is __, E to C is __. Completes triangle BCE via BE and CE.
+E B 141.4213562373095 C 100.0
 D B 100.0 E 100.0
 G D 141.4213562373095 E 100.0
 F D 100.0 G 100.0
@@ -41,5 +43,5 @@ D' E' 100.0 F' 100.0
 C' D' 141.4213562373095 E' 100.0
 B' C' 100.0 D' 100.0
 # The last point introduced is taken to be the other endpoint of the segment
-# being surveyed, such that A to Ap is of interest.
+# being surveyed, such that A to A' is of interest.
 A' B' 70.71067811865476 C' 70.71067811865476
