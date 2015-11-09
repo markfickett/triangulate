@@ -10,9 +10,13 @@
 # target.
 
 # for DrawLattice
-import PIL
-import PIL.Image
-import PIL.ImageDraw
+try:
+  import PIL
+  import PIL.Image
+  import PIL.ImageDraw
+except ImportError, e:
+  print 'Could not import PIL:', e
+  PIL = None
 
 import math
 import os
@@ -185,6 +189,9 @@ def FormatFeetAndInches(inches_value):
 
 
 def DrawLattice(ordered_points):
+  if PIL is None:
+    print 'PIL unavailable, not drawing lattice.'
+    return
   min_x = min_y = float('Inf')
   max_x = max_y = float('-Inf')
   for point in ordered_points:
