@@ -3,10 +3,11 @@
 # triangle edges.
 #
 # The input is edge lengths for a triangular lattice. The first and last points
-# in the survey data indicate the endpoints of target line segment (property
-# boundary) that was not surveyed directly. The output is intercects between
-# surveyed line segments and that target. For example, output like BC 51.22
-# would mean that 51.22 units along line segment BC intercects the target.
+# in the survey data indicate the endpoints of target line segment (ex: a
+# property boundary) that was not surveyed directly. The output is intercects
+# between surveyed line segments and that target. For example, output like
+# BC 51.22 would mean that 51.22 units along line segment BC intercects the
+# target.
 
 # for DrawLattice
 import PIL
