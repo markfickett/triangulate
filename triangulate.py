@@ -268,7 +268,7 @@ if __name__ == '__main__':
   print '%s\t%s\t%s' % ('segment', 'intersection location', 'distance')
   for point in ordered_points[2:-1]:
     for neighbor_point, (x, y), distance in point.GetIntersections(first, last):
-      print '%s %s\t%f, %f\t%s' % (
-          point.name, neighbor_point.name, x, y, FormatFeetAndInches(distance))
+      print '%s %s\t%s\t%f, %f' % (
+          point.name, neighbor_point.name, FormatFeetAndInches(distance), x, y)
 
   DrawLattice(ordered_points)
