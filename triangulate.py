@@ -251,7 +251,7 @@ if __name__ == '__main__':
   points = {}
   ordered_points = []
   with open(edges_path) as edges_file:
-    print '%s\t%s' % ('point', 'location')
+    print '%s\t%s' % ('point', 'coordinates')
     for line in edges_file:
       parsed = ParseLine(line)
       if parsed is None:
@@ -274,7 +274,7 @@ if __name__ == '__main__':
     print '%s\t%f, %f' % (point.name, point.x, point.y)
 
   # Calculate intersections.
-  print '%s\t%s\t%s' % ('segment', 'intersection location', 'distance')
+  print '%s\t%s\t%s' % ('segment', 'intersection', 'coordinates')
   for point in ordered_points[2:-1]:
     for neighbor_point, (x, y), distance in point.GetIntersections(first, last):
       print '%s %s\t%s\t%f, %f' % (
